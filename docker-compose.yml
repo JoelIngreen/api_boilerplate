@@ -22,7 +22,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: ghcr.io/joelingreen/api_boilerplate:latest
     container_name: api_app
     restart: unless-stopped
     ports:
