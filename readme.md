@@ -1,248 +1,135 @@
 # API Boilerplate (Node + Express + TypeScript + Prisma + PostgreSQL)
 
-Plantilla lista para producción para crear APIs REST modernas con validación tipada, documentación automática y soporte opcional de base de datos.
+## 🚀 ARRANCAR EN 30 SEGUNDOS (COPIA Y PEGA)
+
+**Linux / macOS**
+
+```bash
+git clone https://github.com/JoelIngreen/api_boilerplate
+cd api_boilerplate
+cp .env.example .env
+docker compose pull
+docker compose up -d
+```
+
+**Windows (PowerShell)**
+
+```powershell
+git clone https://github.com/JoelIngreen/api_boilerplate
+cd api_boilerplate
+copy .env.example .env
+docker compose pull
+docker compose up -d
+```
+
+Luego abre en el navegador:
+
+```
+http://localhost:20000/health
+http://localhost:20000/docs
+```
+
+No necesitas instalar Node, npm, Prisma ni PostgreSQL.
+Docker levanta todo automáticamente.
+
+---
+
+## ✨ Qué es este proyecto
+
+Plantilla lista para producción para crear APIs REST modernas con validación tipada, documentación automática y base de datos PostgreSQL opcional.
 
 ---
 
 ## ✨ Características
 
-* **Node 20 + TypeScript (ESM)**
-* **Express 5**
-* **Prisma 7 con adapter-pg (sin driver interno)**
-* **PostgreSQL** (opcional – la API puede funcionar sin DB)
-* **Zod** validación tipada
-* **Swagger / OpenAPI** documentación automática
-* **Docker & Docker Compose ready**
-* **Healthcheck real de base de datos**
-* **Modo memoria si DB deshabilitada** (perfecto para tests o desarrollo rápido)
-* **CI build de imagen Docker incluido**
+* Node 20 + TypeScript (ESM)
+* Express 5
+* Prisma 7 (adapter‑pg)
+* PostgreSQL
+* Zod validation
+* Swagger / OpenAPI automático
+* Docker ready (sin instalación local)
+* Healthcheck real
+* Funciona incluso sin DB (modo memoria)
 
 ---
 
-## 📁 Estructura del proyecto
+## 🧠 Cómo funciona internamente
+
+El proyecto arranca dos contenedores:
+
+* **app** → API compilada
+* **postgres** → base de datos
+
+El equipo solo levanta docker‑compose. Nada más.
+
+---
+
+## 📁 Estructura
 
 ```
 src/
- ├─ api/           → Rutas HTTP
- ├─ core/          → Configuración, DB, swagger
- ├─ models/        → Schemas Zod + tipos
- ├─ services/      → Lógica de negocio
- └─ index.ts       → Bootstrap del servidor
-
-prisma/
- └─ schema.prisma  → Modelo de datos
-
-storage/           → Volumen persistente para archivos
+ ├─ api/       rutas
+ ├─ core/      config y db
+ ├─ models/    schemas zod
+ ├─ services/  lógica negocio
+ └─ index.ts   bootstrap
 ```
 
 ---
 
-## 🚀 Quick Start (Docker recomendado)
+## 💻 Desarrollo local (opcional)
 
-### 1. Configurar variables de entorno
-
-```bash
-cp .env.example .env
-```
-
-Editar `.env` si es necesario.
-
-### 2. Levantar el proyecto
-
-```bash
-docker compose up -d --build
-```
-
-La API estará disponible en:
-
-```
-http://localhost:20000
-http://localhost:20000/docs
-```
-
----
-
-## 💻 Desarrollo local (sin Docker)
-
-### Requisitos
-
-* Node 20+
-* PostgreSQL (opcional)
-
-### Instalar dependencias
+Solo si quieres programar dentro del proyecto:
 
 ```bash
 npm install
-```
-
-### Ejecutar en modo desarrollo
-
-```bash
 npm run dev
 ```
 
-### Build producción
+---
 
-```bash
-npm run build
-npm start
-```
+## 🧪 Endpoints útiles
+
+| Endpoint | Descripción     |
+| -------- | --------------- |
+| /health  | estado servicio |
+| /docs    | swagger UI      |
 
 ---
 
-## ⚙️ Variables de entorno
+## 🐳 Flujo de trabajo del equipo
 
-| Variable          | Descripción                     |
-| ----------------- | ------------------------------- |
-| API_PORT          | Puerto del servidor             |
-| ENABLE_DATABASE   | 1 = usa PostgreSQL, 0 = memoria |
-| POSTGRES_USER     | Usuario DB                      |
-| POSTGRES_PASSWORD | Password DB                     |
-| POSTGRES_DB       | Base de datos                   |
-| POSTGRES_HOST     | Host DB                         |
-| POSTGRES_PORT     | Puerto DB                       |
-| SCHEMA_NAME       | Schema SQL                      |
-| STORAGE_PATH      | Ruta almacenamiento             |
-| NODE_ENV          | environment                     |
+Tú (dev):
+
+```
+git push
+→ GitHub construye imagen automáticamente
+```
+
+Equipo:
+
+```
+git pull
+docker compose pull
+docker compose up -d
+```
+
+Nunca ejecutar la imagen sola con `docker run`.
+Siempre usar docker compose.
 
 ---
 
-## 🧠 Modos de funcionamiento
+## Problemas comunes
 
-### DB habilitada
+**Puerto ocupado**
 
-Usa Prisma + PostgreSQL
+Cambiar API_PORT en `.env`
 
-### DB deshabilitada
+**DB deshabilitada**
 
-La API funciona igual usando memoria interna:
-
-Ideal para:
-
-* tests
-* demos
-* desarrollo frontend
+Poner `ENABLE_DATABASE=1` en `.env`
 
 ---
 
-## 🗄️ Prisma & Migraciones
-
-Ejecutadas automáticamente al arrancar el contenedor:
-
-```
-prisma migrate deploy
-```
-
-### Desarrollo manual
-
-```bash
-npx prisma migrate dev
-npx prisma studio
-```
-
----
-
-## 📚 Documentación API
-
-Swagger UI disponible en:
-
-```
-GET /docs
-GET /openapi.json
-```
-
----
-
-## ❤️ Health Check
-
-```
-GET /health
-```
-
-Respuestas:
-
-| Estado             | Significado |
-| ------------------ | ----------- |
-| healthy            | API OK      |
-| database connected | DB OK       |
-| database disabled  | DB no usada |
-| unhealthy          | DB caída    |
-
----
-
-## 🧪 Requests de ejemplo
-
-Archivo incluido:
-
-```
-items.http
-```
-
-Compatible con:
-
-* VSCode REST Client
-* Jetbrains HTTP Client
-
----
-
-## 🐳 Docker
-
-La imagen:
-
-* compila TypeScript
-* genera Prisma Client
-* ejecuta migraciones
-* arranca servidor
-
-Puerto interno: **20000**
-
----
-
-## 🧱 Añadir un nuevo módulo (guía rápida)
-
-1. Crear modelo Zod en `models/`
-2. Crear service en `services/`
-3. Crear router en `api/`
-4. Registrar router en `index.ts`
-5. Documentar con Swagger annotations
-
----
-
-## 🔁 CI/CD
-
-El pipeline construye y publica la imagen Docker en el registry:
-
-```
-.gitlab-ci.yml
-```
-
----
-
-## 🛠️ Troubleshooting
-
-### La API arranca pero falla DB
-
-```
-ENABLE_DATABASE=0
-```
-
-### Prisma error de conexión
-
-Revisar variables `.env`
-
-### Puerto ocupado
-
-Cambiar `API_PORT`
-
----
-
-## 👨‍💻 Filosofía del proyecto
-
-Este boilerplate intenta ser:
-
-* mínimo pero escalable
-* opinionated pero flexible
-* usable sin DB
-* listo para producción
-
-Pensado para iniciar APIs reales en minutos sin pelearte con configuración.
+Este repo está pensado para que cualquier persona pueda levantar la API en menos de 1 minuto.
