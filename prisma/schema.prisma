@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Items table (para el ejemplo)
+model Item {
+  id       Int    @id @default(autoincrement())
+  name     String @db.VarChar(255)
+  category String @db.VarChar(100)
+  price    Float
+
+  @@map("items")
+}
+
+// Documents table (para referencia futura)
+model Document {
+  id          Int      @id @default(autoincrement())
+  fileName    String   @map("file_name") @db.VarChar(255)
+  md5         String   @db.VarChar(32)
+  storagePath String   @map("storage_path") @db.Text
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("documents")
+}
