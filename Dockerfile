@@ -24,4 +24,4 @@ RUN npm prune --production
 EXPOSE 20000
 
 # Run migrations and start app
-CMD ["sh", "-c", "npx prisma migrate deploy && node dist/index.js"]
+CMD ["sh", "-c", "if [ -n \"$DATABASE_URL\" ]; then echo \"Running migrations...\"; npx prisma migrate deploy --schema=prisma/schema.prisma; else echo \"DATABASE_URL not set, skipping migrations\"; fi; node dist/index.js"]
