@@ -20,9 +20,7 @@ services:
       retries: 5
 
   app:
-    build:
-      context: .
-      dockerfile: ghcr.io/joelingreen/api_boilerplate:latest
+    image: ghcr.io/joelingreen/api_boilerplate:latest
     container_name: api_app
     restart: unless-stopped
     ports:
@@ -30,11 +28,11 @@ services:
     environment:
       API_PORT: ${API_PORT}
       enable_database: ${ENABLE_DATABASE}
-      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
       postgres_user: ${POSTGRES_USER}
       postgres_password: ${POSTGRES_PASSWORD}
-      postgres_host: ${POSTGRES_HOST}
-      postgres_port: ${POSTGRES_PORT}
+      postgres_host: postgres
+      postgres_port: 5432
       postgres_db: ${POSTGRES_DB}
       schema_name: ${SCHEMA_NAME}
       storage_path: ${STORAGE_PATH}
